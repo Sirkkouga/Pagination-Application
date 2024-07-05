@@ -11,4 +11,14 @@ Upload to a GitHub repository the necessary files to run the app as well as the 
 •	Each page has 25 lines, at the end of the page add a separation mark that includes the page number.
 •	The app can be done in C++, Java or Golang.
 
+## How to run the code
+
+- Java 11 needed
+
+- Using VSCode:
+    - Just run the code with F5 for debuging and Ctrl+F5 for no debug.
+        
+- Terminal:
+    - javac src/App.java
+    - java -cp src App
 

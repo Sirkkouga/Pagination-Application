@@ -37,11 +37,9 @@ public class App {
 
         //Formatear bien el texto para que sea más legible
         res = correctStartString(res);
-
         if (unfinishedWord) 
             res = correctEndString(res);
         res += "\n";
-
         currentLine++;
 
         //-1 para evitar que el \n nos cuente como un caracter
@@ -49,9 +47,7 @@ public class App {
     }
 
     /*  
-     * Corregir el inicio de la linea, podria solo eliminar el primer espacio si lo hubiera, 
-     * pero para hacerlo más general he decidido eliminar todos los espacios iniciales, 
-     * por si hay un texto que lo necesitase.
+     * Corregir el inicio de la linea
      */
     private static String correctStartString(String text){
         return text.stripLeading();
@@ -71,7 +67,7 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
-        BufferedReader br = new BufferedReader(new FileReader("src/document.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("src/document.txt")); //cambiar fichero si es necesario
 
         String content = br.readLine(); //Leer todo el fichero que sera de 1 linea
         br.close(); 
@@ -82,9 +78,11 @@ public class App {
             writer.write(newPage());
             
             for (int i = 0; i < content.length(); i++) {
+                
                 String line[] = createLine(i, content);
                 i = Integer.parseInt(line[1]);
                 writer.write(line[0]);
+
                 if (currentLine == 25) { //25 lineas por página 
                     writer.write("\n");
                     writer.write(newPage());
