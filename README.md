@@ -1,10 +1,10 @@
-#Pagination-Aplication
+# Pagination-Aplication
 
 The application input will be the file “document.txt”. It is a 1 line file with words and the app should output a Document that paginates the text.
 
 Upload to a GitHub repository the necessary files to run the app as well as the instructions to do so.
  
-##Requirements:
+## Requirements:
 
 •	Each line consists of a maximum of 80 characters, if the line reaches this number of chars in the middle of a word, 
     this one should be placed at the next line.
