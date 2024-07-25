@@ -8,6 +8,8 @@ public class App {
 
     private static int currentPage = 1;
     private static int currentLine = 0;
+    private static int MAX_LINE_PER_PAGE = 25;
+    private static int MAX_CHAR_PER_LINE = 80;
     /*
      * Añadir nueva página
      */
@@ -20,14 +22,13 @@ public class App {
     /*
      * Crear una línea del fichero
      */
-    private static String[] createLine(int numIt, String text){
+    private static String createLine(int numIt, String text){
 
-        String res = "";
+        StringBuilder res = new StringBuilder();
 
         //Crear linea de 80 caracteres o hasta que se acabe el fichero si hay menos
-        int maxIndex = Math.min(numIt + 80, text.length());
-        for (int i = numIt; i < maxIndex ; i++)
-            res += text.charAt(i);
+        int maxIndex = Math.min(numIt + MAX_CHAR_PER_LINE, text.length());
+        res.append(text.substring(numIt, maxIndex));
 
         
         //Comprobar si la palabra no se ha acabado
@@ -37,32 +38,34 @@ public class App {
 
         //Formatear bien el texto para que sea más legible
         res = correctStartString(res);
-        if (unfinishedWord) 
+        if (unfinishedWord){ 
             res = correctEndString(res);
-        res += "\n";
+        }
+        res.append("\n");
         currentLine++;
 
         //-1 para evitar que el \n nos cuente como un caracter
-        return new String[]{res, String.valueOf(numIt +res.length() - 1)}; 
+        return res.toString(); 
     }
 
     /*  
      * Corregir el inicio de la linea
      */
-    private static String correctStartString(String text){
-        return text.stripLeading();
+    private static StringBuilder correctStartString(StringBuilder text){
+        StringBuilder res = new StringBuilder( text.toString().stripLeading() );
+        return res;
     }
 
     /*
      * Corregir el final de la linea, eliminando todo lo que haya detrás del último espacio
      */
-    private static String correctEndString(String text){
-        String res = text;
-        int lastSpace = text.lastIndexOf(' '); 
+    private static StringBuilder correctEndString(StringBuilder text){
+        int lastSpace = text.toString().lastIndexOf(' '); 
         if (lastSpace != -1){
-            res = text.substring(0, lastSpace); 
+            StringBuilder res = new StringBuilder (text.toString().substring(0, lastSpace)); 
+            return res;
         }
-        return res;
+        return text;
     }
 
     public static void main(String[] args) throws Exception {
@@ -79,16 +82,15 @@ public class App {
             
             for (int i = 0; i < content.length(); i++) {
                 
-                String line[] = createLine(i, content);
-                i = Integer.parseInt(line[1]);
-                writer.write(line[0]);
+                String line = createLine(i, content);
+                i += line.length() - 1; //actualizamos el indice del fichero
+                writer.write(line);
 
-                if (currentLine == 25) { //25 lineas por página 
+                if (currentLine == MAX_LINE_PER_PAGE) { //25 lineas por página 
                     writer.write("\n");
                     writer.write(newPage());
                     currentLine = 0; //reseteamos las lineas de la página
                 }
-                
             }
 
             System.out.println("Archivo listo en: " + targetFile);
