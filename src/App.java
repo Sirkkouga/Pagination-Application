@@ -10,6 +10,7 @@ public class App {
     private static int currentLine = 0;
     private static int MAX_LINE_PER_PAGE = 25;
     private static int MAX_CHAR_PER_LINE = 80;
+    private static String fichero = "src/document.txt"; //cambiar fichero si es necesario
     /*
      * Añadir nueva página
      */
@@ -70,30 +71,34 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
-        BufferedReader br = new BufferedReader(new FileReader("src/document.txt")); //cambiar fichero si es necesario
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fichero));
 
-        String content = br.readLine(); //Leer todo el fichero que sera de 1 linea
-        br.close(); 
+            String content = br.readLine(); //Leer todo el fichero que sera de 1 linea
+            br.close(); 
 
-        String targetFile = "src/solution.txt";
+            String targetFile = "src/solution.txt";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile))) {
-            writer.write(newPage());
-            
-            for (int i = 0; i < content.length(); i++) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile))) {
+                writer.write(newPage());
                 
-                String line = createLine(i, content);
-                i += line.length() - 1; //actualizamos el indice del fichero
-                writer.write(line);
+                for (int i = 0; i < content.length(); i++) {
+                    
+                    String line = createLine(i, content);
+                    i += line.length() - 1; //actualizamos el indice del fichero
+                    writer.write(line);
 
-                if (currentLine == MAX_LINE_PER_PAGE) { //25 lineas por página 
-                    writer.write("\n");
-                    writer.write(newPage());
-                    currentLine = 0; //reseteamos las lineas de la página
+                    if (currentLine == MAX_LINE_PER_PAGE) { //25 lineas por página 
+                        writer.write("\n");
+                        writer.write(newPage());
+                        currentLine = 0; //reseteamos las lineas de la página
+                    }
                 }
-            }
 
-            System.out.println("Archivo listo en: " + targetFile);
+                System.out.println("Archivo listo en: " + targetFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
